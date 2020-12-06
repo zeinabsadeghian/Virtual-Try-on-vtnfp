@@ -140,3 +140,22 @@ class Dataset(torch.utils.data.Dataset):
     
     def __len__(self):
         return len(self.list_IDs)
+    
+    
+    
+    
+class CPDataLoader(object):
+    def __init__(self, training_set, params):
+        #training_set = Dataset(dataset)
+        self.data_loader = torch.utils.data.DataLoader(training_set, **params)
+        self.dataset = training_set
+        self.data_iter = self.data_loader.__iter__()
+        
+    def next_batch(self):
+        try:
+            batch = self.data_iter.__next__()
+        except StopIteration:
+            self.data_iter = self.data_loader.__iter__()
+            batch = self.data_iter.__next__()
+
+        return batch
